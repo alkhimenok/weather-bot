@@ -14,7 +14,9 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "i18n": "^0.15.0",
+    "node-telegram-bot-api": "^0.57.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
@@ -31,5 +33,5 @@
     "nodemon": "^2.0.16",
     "prettier": "2.6.2",
     "rimraf": "^3.0.2"
-  }  
+  }
 }
