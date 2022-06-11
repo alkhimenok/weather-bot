@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "name": "weather-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "alkhimenok <alkhimenok.kirill.leonidovich@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "yarn format && yarn build && node ./dist/index",
+    "dev": "yarn format && nodemon index",
+    "build": "rimraf ./dist && babel -d ./dist ./src -s",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.2",
+    "@babel/eslint-parser": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
+    "babel-cli": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.1",
+    "nodemon": "^2.0.16",
+    "prettier": "2.6.2",
+    "rimraf": "^3.0.2"
+  }  
+}
