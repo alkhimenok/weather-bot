@@ -1,28 +1,26 @@
-const messageTypes = require('./constants/messageTypes')
+const commandTypes = require('./constants/commandTypes')
 
 class Events {
   constructor(bot, { handleStart }) {
     this.bot = bot
     this.handleStart = handleStart
 
-    this.initMessageEvents = this.initMessageEvents.bind(this)
-
-    this.initEvents()
+    this.initEvents = this.initEvents.bind(this)
   }
 
   initEvents() {
-    this.bot.on('message', this.initMessageEvents)
+    this.bot.on('message', this._initMessageEvents.bind(this))
   }
 
-  initMessageEvents(message, metadata) {
+  _initMessageEvents(message, metadata) {
     try {
       const handler = {
-        [messageTypes.start]: this.handleStart
+        [commandTypes.start]: this.handleStart
       }[message.text]
 
       handler(message, metadata)
     } catch (e) {
-      console.log(e)
+      console.warn(e)
     }
   }
 }
