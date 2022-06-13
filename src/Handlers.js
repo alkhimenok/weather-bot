@@ -7,7 +7,7 @@ class Handlers {
     this.user = user
 
     this.handleStart = this.handleStart.bind(this)
-    this.handleSwitchLang = this.handleSwitchLang.bind(this)
+    this.handleSetLang = this.handleSetLang.bind(this)
     this.handleConfirmLang = this.handleConfirmLang.bind(this)
     this.handleChangeLang = this.handleChangeLang.bind(this)
   }
@@ -21,7 +21,7 @@ class Handlers {
     await this._sendMessage(id, title, option)
   }
 
-  async handleSwitchLang({ message }, selectedLang) {
+  async handleSetLang({ message }, selectedLang) {
     switchLang(selectedLang)
 
     const lang = availableLangs[selectedLang]
@@ -59,10 +59,10 @@ class Handlers {
   }
 
   _getEditDefaultInlineKeyboardOptions(inline_keyboard, { message_id, chat }) {
-    const data = { inline_keyboard }
+    const defaultInlineKeyBoard = this._getDefaultInlineKeyboardOptions(inline_keyboard)
     const { id: chat_id } = chat
 
-    return { reply_markup: JSON.stringify(data), message_id, chat_id }
+    return { ...defaultInlineKeyBoard, message_id, chat_id }
   }
 
   _getDefaultKeyboardOptions(keyboard) {
@@ -72,7 +72,7 @@ class Handlers {
   }
 
   _getLandKeyboard() {
-    const callback = (lang) => ({ text: availableLangs[lang], callback_data: `lang:${lang}` })
+    const callback = (lang) => ({ text: availableLangs[lang], callback_data: `setLang:${lang}` })
 
     return [langList.map(callback)]
   }

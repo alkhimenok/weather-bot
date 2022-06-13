@@ -1,5 +1,5 @@
 const queryTypes = {
-  switchLang: 'lang',
+  setLang: 'setLang',
   confirmLang: 'confirmLang',
   changeLang: 'changeLang'
 }

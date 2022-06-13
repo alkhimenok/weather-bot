@@ -2,10 +2,10 @@ const commandTypes = require('./constants/commandTypes')
 const queryTypes = require('./constants/queryTypes')
 
 class Events {
-  constructor(bot, { handleStart, handleSwitchLang, handleConfirmLang, handleChangeLang }) {
+  constructor(bot, { handleStart, handleSetLang, handleConfirmLang, handleChangeLang }) {
     this.bot = bot
     this.handleStart = handleStart
-    this.handleSwitchLang = handleSwitchLang
+    this.handleSetLang = handleSetLang
     this.handleConfirmLang = handleConfirmLang
     this.handleChangeLang = handleChangeLang
 
@@ -36,7 +36,7 @@ class Events {
 
     try {
       const handler = {
-        [queryTypes.switchLang]: this.handleSwitchLang,
+        [queryTypes.setLang]: this.handleSetLang,
         [queryTypes.confirmLang]: this.handleConfirmLang,
         [queryTypes.changeLang]: this.handleChangeLang
       }[type]
