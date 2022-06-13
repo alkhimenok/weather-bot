@@ -1,11 +1,13 @@
 const commandTypes = require('./constants/commandTypes')
-const availableLangs = require('./constants/availableLangs')
+const queryTypes = require('./constants/queryTypes')
 
 class Events {
-  constructor(bot, { handleStart, handleSwitchLang }) {
+  constructor(bot, { handleStart, handleSwitchLang, handleConfirmLang, handleChangeLang }) {
     this.bot = bot
     this.handleStart = handleStart
     this.handleSwitchLang = handleSwitchLang
+    this.handleConfirmLang = handleConfirmLang
+    this.handleChangeLang = handleChangeLang
 
     this.initEvents = this.initEvents.bind(this)
   }
@@ -16,15 +18,12 @@ class Events {
   }
 
   _initMessageEvents(message, metadata) {
-    const { values, fromEntries } = Object
-    const langTitleList = values(availableLangs)
-    const langHandlers = fromEntries(langTitleList.map((lang) => [lang, this.handleSwitchLang]))
+    const type = message.text
 
     try {
       const handler = {
-        [commandTypes.start]: this.handleStart,
-        ...langHandlers
-      }[message.text]
+        [commandTypes.start]: this.handleStart
+      }[type]
 
       handler(message, metadata)
     } catch (e) {
@@ -32,9 +31,17 @@ class Events {
     }
   }
 
-  _initCallbackEvents(message, metadata) {
+  _initCallbackEvents(query) {
+    const [type, option] = query.data.split(':')
+
     try {
-      console.log('_initCallbackEvents', message, metadata)
+      const handler = {
+        [queryTypes.switchLang]: this.handleSwitchLang,
+        [queryTypes.confirmLang]: this.handleConfirmLang,
+        [queryTypes.changeLang]: this.handleChangeLang
+      }[type]
+
+      handler(query, option)
     } catch (e) {
       console.warn('_initCallbackEvents', e)
     }
