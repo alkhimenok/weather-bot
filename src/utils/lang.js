@@ -22,6 +22,10 @@ const switchLang = (lang) => {
   return i18n.getLocale()
 }
 
+const getLang = () => {
+  return i18n.getLocale()
+}
+
 const getLangList = () => {
   const queue = { ru: 0, en: 1 }
 
@@ -30,4 +34,4 @@ const getLangList = () => {
 
 const langList = getLangList()
 
-module.exports = { langList, initLang, t, switchLang, getLangList }
+module.exports = { langList, initLang, t, switchLang, getLang, getLangList }
