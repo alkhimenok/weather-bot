@@ -7,8 +7,9 @@
   "license": "MIT",
   "scripts": {
     "start": "yarn format && yarn build && node ./dist/index",
-    "dev": "yarn format && nodemon index",
-    "build": "rimraf ./dist && babel -d ./dist ./src -s",
+    "dev": "nodemon index",
+    "lang:transfer": "node ./langTransfer",
+    "build": "rimraf ./dist && babel -d ./dist ./src -s && yarn lang:transfer",
     "format": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
@@ -16,7 +17,8 @@
   "dependencies": {
     "dotenv": "^16.0.1",
     "i18n": "^0.15.0",
-    "node-telegram-bot-api": "^0.57.0"
+    "node-telegram-bot-api": "^0.57.0",
+    "uid": "^2.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",

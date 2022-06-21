@@ -11,11 +11,17 @@ class Handlers {
     this.handleSetLang = this.handleSetLang.bind(this)
     this.handleConfirmLang = this.handleConfirmLang.bind(this)
     this.handleChangeLang = this.handleChangeLang.bind(this)
+    this.handleRequestLocation = this.handleRequestLocation.bind(this)
     this.handleSetLocation = this.handleSetLocation.bind(this)
+    this.handleConfirmLocation = this.handleConfirmLocation.bind(this)
+    this.handleChangeLocation = this.handleChangeLocation.bind(this)
 
     this.handleMessageCatch = this.handleMessageCatch.bind(this)
     this.handleQueryCatch = this.handleQueryCatch.bind(this)
+    this.handleRequestLocationCatch = this.handleRequestLocationCatch.bind(this)
   }
+
+  lastMessageId = null
 
   get isBotRunning() {
     return !!this.user.status
@@ -47,7 +53,7 @@ class Handlers {
     const keyboard = this._getLangSwitchFinishKeyboard()
     const option = this._getDefaultInlineKeyboardOptions(keyboard)
 
-    await this._editMessage(title, option, message)
+    await this._editLastMessage(title, option)
   } // query
 
   async handleConfirmLang({ message }) {
@@ -58,7 +64,7 @@ class Handlers {
 
     this.user.updateData({ lang })
 
-    await this._editMessage(title, options, message)
+    await this._editLastMessage(title, options)
 
     if (this.user.isConnected) return
 
@@ -66,7 +72,7 @@ class Handlers {
 
     this.user.updateData({ status })
 
-    await this.handleSetLocation({ message })
+    await this.handleRequestLocation({ message })
   } // query
 
   async handleChangeLang({ message }) {
@@ -74,11 +80,11 @@ class Handlers {
     const keyboard = this._getLandKeyboard()
     const option = this._getDefaultInlineKeyboardOptions(keyboard)
 
-    await this._editMessage(title, option, message)
+    await this._editLastMessage(title, option)
   } // query
 
-  async handleSetLocation({ message }) {
-    const title = t('fillProfile.location.set.title')
+  async handleRequestLocation({ message }) {
+    const title = t('fillProfile.location.request.title')
     const keyboardOptions = { request_location: true }
     const keyboard = this._getLocationKeyboard(keyboardOptions)
     const options = this._getDefaultKeyboardOptions(keyboard)
@@ -86,22 +92,65 @@ class Handlers {
     await this._sendMessage(title, options)
   } // query
 
-  async handleMessageCatch(region, e) {
-    const title = !this.user.isConnected
-      ? t('services.region.notFound', { region })
-      : t('fillProfile.continue')
+  async handleSetLocation(message) {
+    // console.log(message.location.latitude)
+    // console.log(message.location.longitude)
+    // TODO: request get location on coords
+
+    const location = 'Belarus'
+    const title = t('fillProfile.location.set.title', { location })
+    const keyboard = this._getLocationSwitchFinishKeyboard()
+    const option = this._getDefaultInlineKeyboardOptions(keyboard)
+
+    this._deleteLastMessage()
+    this._sendMessage(title, option)
+  } // message
+
+  async handleConfirmLocation() {
+    const location = 'Belarus'
+    const title = t('fillProfile.location.finish.title', { location })
+
+    this.user.updateData({ location })
+
+    await this._editLastMessage(title)
+
+    if (this.user.isConnected) return
+
+    this._sendMessage(title)
+  } // query
+
+  async handleChangeLocation() {
+    const title = t('fillProfile.location.change.title')
+    const keyboardOptions = { request_location: true }
+    const keyboard = this._getLocationKeyboard(keyboardOptions)
+    const options = this._getDefaultKeyboardOptions(keyboard)
+
+    await this._editLastMessage(title, options)
+  } // query
+
+  async handleMessageCatch(location, e) {
+    const title = this.user.isConnected
+      ? t('warnings.location.notFound', { location })
+      : t('warnings.profile.notCompleted')
 
     await this._sendMessage(title)
   }
 
   async handleQueryCatch(type, e) {
-    console.warn('error')
+    console.warn('query error')
+  }
+
+  async handleRequestLocationCatch(type, e) {
+    console.warn('location error')
   }
 
   async _sendMessage(title, keyboardOptions) {
+    const { chatId } = this.user
     const options = this._abstractOptions(keyboardOptions)
 
-    await this.bot.sendMessage(this.user.chatId, title, options)
+    const { message_id } = await this.bot.sendMessage(chatId, title, options)
+
+    this.lastMessageId = message_id
   }
 
   async _editMessage(title, keyboardOptions, { message_id }) {
@@ -110,6 +159,20 @@ class Handlers {
     const options = { message_id, chat_id, ...initOptions }
 
     await this.bot.editMessageText(title, options)
+  }
+
+  async _editLastMessage(title, keyboardOptions) {
+    await this._editMessage(title, keyboardOptions, { message_id: this.lastMessageId })
+  }
+
+  async _deleteMessage({ message_id }) {
+    const { chatId } = this.user
+
+    await this.bot.deleteMessage(chatId, message_id)
+  }
+
+  async _deleteLastMessage() {
+    await this._deleteMessage({ message_id: this.lastMessageId })
   }
 
   _getDefaultKeyboardOptions(keyboard) {
@@ -121,7 +184,7 @@ class Handlers {
   }
 
   _getLandKeyboard(options) {
-    const callback = (lang) => ({ text: availableLangs[lang], callback_data: `setLang:${lang}` })
+    const callback = (i) => ({ text: availableLangs[i], callback_data: `setLang:${i}` })
 
     const list = langList
 
@@ -129,7 +192,7 @@ class Handlers {
   }
 
   _getLangSwitchFinishKeyboard(options) {
-    const callback = (action) => ({ text: t(`actions.${action}`), callback_data: `${action}Lang` })
+    const callback = (i) => ({ text: t(`actions.${i}`), callback_data: `${i}Lang` })
 
     const list = ['confirm', 'change']
 
@@ -137,9 +200,17 @@ class Handlers {
   }
 
   _getLocationKeyboard(options) {
-    const callback = (action) => ({ text: t(`fillProfile.location.${action}`) })
+    const callback = (i) => ({ text: t(`fillProfile.location.${i}`) })
 
     const list = ['allow']
+
+    return this._abstractKeyboard(list, callback, options)
+  }
+
+  _getLocationSwitchFinishKeyboard(options) {
+    const callback = (i) => ({ text: t(`actions.${i}`), callback_data: `${i}Location` })
+
+    const list = ['confirm', 'change']
 
     return this._abstractKeyboard(list, callback, options)
   }

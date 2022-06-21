@@ -10,6 +10,7 @@ const { initLang } = require('./utils/lang')
 
 const runBot = () => {
   const { BOT_TOKEN: token } = process.env
+
   const bot = new TelegramBot(token, { polling: true })
   const user = new User()
   const handlers = new Handlers(bot, user)

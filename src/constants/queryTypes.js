@@ -1,7 +1,9 @@
 const queryTypes = {
   setLang: 'setLang',
   confirmLang: 'confirmLang',
-  changeLang: 'changeLang'
+  changeLang: 'changeLang',
+  confirmLocation: 'confirmLocation',
+  changeLocation: 'changeLocation'
 }
 
 module.exports = queryTypes
