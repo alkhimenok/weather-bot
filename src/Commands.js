@@ -1,5 +1,5 @@
 const { t } = require('./utils/lang')
-const commandTypes = require('./constants/commandTypes')
+const COMMANDS = require('./constants/commands')
 
 class Commands {
   constructor(bot) {
@@ -9,13 +9,13 @@ class Commands {
   }
 
   initCommands() {
-    const commandList = Object.keys(commandTypes)
+    const commandList = Object.keys(COMMANDS)
 
     this.bot.setMyCommands(commandList.map(this._getCommandBody))
   }
 
   _getCommandBody(command) {
-    return { command: commandTypes[command], description: t(`commands.${command}`) }
+    return { command: COMMANDS[command], description: t(`commands.${command}`) }
   }
 }
 
