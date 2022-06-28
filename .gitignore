@@ -1,12 +1,12 @@
 node_modules/
 
 # environment
-.env
-.env.dev
-.env.stage
+# .env
+# .env.dev
+# .env.stage
 
 # dist
 dist/
 
 # other
-help.txt
+# help.txt

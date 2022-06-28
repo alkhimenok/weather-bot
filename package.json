@@ -8,17 +8,19 @@
   "scripts": {
     "start": "yarn format && yarn build && node ./dist/index",
     "dev": "nodemon index",
-    "lang:transfer": "node ./langTransfer",
-    "build": "rimraf ./dist && babel -d ./dist ./src -s && yarn lang:transfer",
+    "transfer:lang": "node ./langTransfer",
+    "build": "rimraf ./dist && babel -d ./dist ./src -s && yarn transfer:lang",
     "format": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "axios": "^0.27.2",
+    "colors": "^1.4.0",
     "dotenv": "^16.0.1",
     "i18n": "^0.15.0",
     "node-telegram-bot-api": "^0.57.0",
-    "uid": "^2.0.0"
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
@@ -33,7 +35,6 @@
     "husky": "^8.0.1",
     "lint-staged": "^13.0.1",
     "nodemon": "^2.0.16",
-    "prettier": "2.6.2",
-    "rimraf": "^3.0.2"
+    "prettier": "2.6.2"
   }
 }

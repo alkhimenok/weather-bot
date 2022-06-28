@@ -1,6 +1,6 @@
-const availableLangs = {
+const AVAILABLE_LANGS = {
   ru: 'Русский 🇷🇺',
   en: 'English 🇺🇸'
 }
 
-module.exports = availableLangs
+module.exports = AVAILABLE_LANGS

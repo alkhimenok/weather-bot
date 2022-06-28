@@ -4,26 +4,26 @@
     "start": "Run a bot",
     "profile": "User data"
   },
-  "fillProfile": {
+  "profile": {
     "lang": {
       "set": {
-        "title": "fillProfile.lang.set.title"
+        "title": "profile.lang.set.title"
       },
       "confirm": {
-        "title": "fillProfile.lang.confirm.title"
+        "title": "profile.lang.confirm.title"
       },
       "change": {
-        "title": "fillProfile.lang.change.title"
+        "title": "profile.lang.change.title"
       },
       "finish": {
-        "title": "fillProfile.lang.finish.title"
+        "title": "profile.lang.finish.title"
       }
     },
     "location": {
       "set": {
-        "title": "fillProfile.location.set.title"
+        "title": "profile.location.set.title"
       },
-      "allow": "fillProfile.location.allow"
+      "allow": "profile.location.allow"
     }
   },
   "actions": {

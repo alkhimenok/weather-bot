@@ -1,5 +1,5 @@
-const { t } = require('./utils/lang')
-const COMMANDS = require('./constants/commands')
+const { t } = require('../utils')
+const COMMANDS = require('../constants/commands')
 
 class Commands {
   constructor(bot) {
